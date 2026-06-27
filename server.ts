@@ -25,13 +25,19 @@ const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
 
 const JWT_SECRET = process.env.JWT_SECRET || 'civic-connect-secret-key-2026';
-const MONGODB_URI = process.env.MONGODB_URI || 'mongodb://127.0.0.1:27017/civic_issue';
+const MONGODB_URI =
+  process.env.VERCEL || process.env.NODE_ENV === 'production'
+    ? process.env.MONGODB_URI
+    : process.env.LOCAL_MONGODB_URI || process.env.MONGODB_URI || 'mongodb://127.0.0.1:27017/civic_issue';
 const PORT = process.env.PORT || 3000;
 
 // Initialize Database (Serverless friendly)
 let isConnected = false;
 const connectDB = async () => {
   if (isConnected) return;
+  if (!MONGODB_URI) {
+    throw new Error('MONGODB_URI is not configured');
+  }
   try {
     const db = await mongoose.connect(MONGODB_URI);
     isConnected = db.connections[0].readyState === 1;
