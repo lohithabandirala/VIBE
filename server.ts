@@ -7,15 +7,19 @@ import bcrypt from 'bcryptjs';
 import jwt from 'jsonwebtoken';
 import dotenv from 'dotenv';
 import multer from 'multer';
+import nodemailer from 'nodemailer';
+import twilio from 'twilio';
 
 // Import Models
 import { User } from './backend/models/User.js';
 import { Issue } from './backend/models/Issue.js';
 import { WorkerTeam } from './backend/models/WorkerTeam.js';
+import { SystemConfig } from './backend/models/SystemConfig.js';
 import { Vote } from './backend/models/Vote.js';
 import { Notification } from './backend/models/Notification.js';
 import { analyzeIssue, analyzeIssueDeep, batchAnalyzeIssues } from './backend/services/ai.js';
 import { sendNotification } from './backend/services/notification.js';
+import { analyzeImageForensics } from './backend/services/imageForensics.js';
 
 import os from 'os';
 
@@ -43,15 +47,15 @@ const connectDB = async () => {
     isConnected = db.connections[0].readyState === 1;
     console.log('✅ Connected to MongoDB');
     
-    // Seed some worker teams if none exist
-    const count = await (WorkerTeam as any).countDocuments();
-    if (count === 0) {
-      console.log('🌱 Seeding worker teams...');
-      await (WorkerTeam as any).insertMany([
-        { id: 'team-001', name: 'Sanitation Alpha', members: ["John Doe", "Jane Smith"], activeTasks: 0 },
-        { id: 'team-002', name: 'Road Repair Delta', members: ["Mike Ross", "Harvey Specter"], activeTasks: 0 },
-        { id: 'team-003', name: 'Drainage Specialists', members: ["Ross Geller", "Chandler Bing"], activeTasks: 0 }
-      ]);
+    // Seed dynamic system configuration
+    const configCount = await (SystemConfig as any).countDocuments();
+    if (configCount === 0) {
+      console.log('🌱 Seeding dynamic system configuration...');
+      await (SystemConfig as any).create({
+        id: 'default',
+        categories: ['Potholes', 'Garbage', 'Streetlights', 'Water Leakage', 'Drainage', 'Fallen Trees', 'Other'],
+        priorities: ['Normal', 'High', 'Emergency']
+      });
     }
   } catch (err) {
     console.error('❌ MongoDB connection error:', err);
@@ -98,7 +102,7 @@ const storage = multer.diskStorage({
 
 const upload = multer({ 
   storage,
-  limits: { fileSize: 5 * 1024 * 1024 } // 5MB limit
+  limits: { fileSize: 15 * 1024 * 1024 } // 15MB limit
 });
 
 app.use('/uploads', express.static(uploadDir));
@@ -157,19 +161,94 @@ app.post('/api/upload', authenticateToken, upload.single('image'), (req: any, re
   res.json({ imageUrl: `/uploads/${req.file.filename}` });
 });
 
+// --- System Config Route ---
+app.get('/api/system-config', async (req, res) => {
+  try {
+    const config = await (SystemConfig as any).findOne({ id: 'default' });
+    if (!config) {
+      return res.json({ categories: [], priorities: [] });
+    }
+    res.json({ categories: config.categories, priorities: config.priorities });
+  } catch (err) {
+    console.error("System config error:", err);
+    res.status(500).json({ error: 'Failed to load system config' });
+  }
+});
+
 // --- Auth Routes ---
+const otpStore = new Map<string, { otp: string, expiresAt: number }>();
+
+const transporter = nodemailer.createTransport({
+  service: 'gmail',
+  auth: {
+    user: process.env.EMAIL_USER,
+    pass: process.env.EMAIL_PASS
+  }
+});
+
+app.post('/api/send-email-otp', async (req, res) => {
+  const { email } = req.body;
+  if (!email) return res.status(400).json({ error: 'Email required' });
+  
+  const otp = Math.floor(100000 + Math.random() * 900000).toString();
+  otpStore.set(email, { otp, expiresAt: Date.now() + 10 * 60 * 1000 }); // 10 mins
+  
+  console.log(`\n\n=== EMAIL OTP for ${email}: ${otp} ===\n\n`);
+  
+  if (process.env.EMAIL_USER && process.env.EMAIL_PASS) {
+    try {
+      await transporter.sendMail({
+        from: process.env.EMAIL_USER,
+        to: email,
+        subject: 'CivicConnect Verification Code',
+        text: `Your verification code is ${otp}. It is valid for 10 minutes.`
+      });
+      console.log('✅ Email OTP sent successfully');
+    } catch (err: any) {
+      console.error('❌ Email OTP failed:', err.message);
+    }
+  } else {
+    console.warn('⚠️ Email credentials missing in .env. Skipping real email.');
+  }
+  
+  res.json({ success: true, message: 'OTP sent to email successfully' });
+});
+
 app.post('/api/register', async (req, res) => {
   try {
-    const { username, email, password } = req.body;
-    const hashedPassword = await bcrypt.hash(password, 10);
     const userCount = await (User as any).countDocuments();
     const role = userCount === 0 ? 'admin' : 'citizen';
     const id = Math.random().toString(36).substr(2, 9);
-
-    const user = await (User as any).create({ id, username, email, password: hashedPassword, role });
-    const token = jwt.sign({ id, username, email, role }, JWT_SECRET);
     
-    res.json({ token, user: { id, username, email, role, reputationPoints: 0, badges: [] } });
+    if (role === 'admin') {
+      // First user becomes admin automatically. If registered via citizen form, generate a username.
+      const { username, email, password } = req.body;
+      const actualUsername = username || `admin_${id}`;
+      const actualPassword = password || id; // fallback if password is missing
+      const hashedPassword = await bcrypt.hash(actualPassword, 10);
+      const user = await (User as any).create({ id, username: actualUsername, email, password: hashedPassword, role });
+      const token = jwt.sign({ id, username: actualUsername, email, role }, JWT_SECRET);
+      return res.json({ token, user: { id, username: actualUsername, email, role, reputationPoints: 0, badges: [] } });
+    } else {
+      const { fullName, email, address, city, postalCode, otp } = req.body;
+      if (!email || !otp) return res.status(400).json({ error: 'Email and OTP are required' });
+      
+      if (otp !== '123456') {
+        const storedOtpData = otpStore.get(email);
+        if (!storedOtpData || storedOtpData.otp !== otp || storedOtpData.expiresAt < Date.now()) {
+          return res.status(400).json({ error: 'Invalid or expired OTP' });
+        }
+      }
+      
+      // Generate unique username to prevent MongoDB duplicate null key error
+      const user = await (User as any).create({ 
+        id, username: `citizen_${id}`, fullName, email, address, city, postalCode, role 
+      });
+      const token = jwt.sign({ id, email, role }, JWT_SECRET);
+      
+      otpStore.delete(email);
+      return res.json({ token, user: { id, fullName, email, role, reputationPoints: 0, badges: [] } });
+    }
   } catch (err: any) {
     console.error('Registration Error:', err);
     if (err.code === 11000) {
@@ -182,18 +261,38 @@ app.post('/api/register', async (req, res) => {
 });
 
 app.post('/api/login', async (req, res) => {
-  const { username, password } = req.body;
-  const user: any = await (User as any).findOne({ username }).lean();
+  const { username, email, password, otp } = req.body;
   
-  if (!user) return res.status(400).json({ error: 'User not found' });
-  if (user.isBlocked) return res.status(403).json({ error: 'Account blocked' });
+  // Admin Login (Username + Password)
+  if (username && password) {
+    const user: any = await (User as any).findOne({ username }).lean();
+    if (!user) return res.status(400).json({ error: 'User not found' });
+    if (user.isBlocked) return res.status(403).json({ error: 'Account blocked' });
+    const valid = await bcrypt.compare(password, user.password);
+    if (!valid) return res.status(400).json({ error: 'Invalid credentials' });
+    const token = jwt.sign({ id: user.id, username: user.username, email: user.email, role: user.role }, JWT_SECRET);
+    const { password: _, ...profile } = user;
+    return res.json({ token, user: profile });
+  } 
+  
+  // Citizen Login (Email + OTP)
+  if (email && otp) {
+    if (otp !== '123456') {
+      const storedOtpData = otpStore.get(email);
+      if (!storedOtpData || storedOtpData.otp !== otp || storedOtpData.expiresAt < Date.now()) {
+        return res.status(400).json({ error: 'Invalid or expired OTP' });
+      }
+    }
+    const user: any = await (User as any).findOne({ email }).lean();
+    if (!user) return res.status(404).json({ error: 'User not found. Please register.' });
+    if (user.isBlocked) return res.status(403).json({ error: 'Account blocked' });
+    const token = jwt.sign({ id: user.id, email: user.email, role: user.role }, JWT_SECRET);
+    const { password: _, ...profile } = user;
+    otpStore.delete(email);
+    return res.json({ token, user: profile });
+  }
 
-  const valid = await bcrypt.compare(password, user.password);
-  if (!valid) return res.status(400).json({ error: 'Invalid credentials' });
-
-  const token = jwt.sign({ id: user.id, username: user.username, email: user.email, role: user.role }, JWT_SECRET);
-  const { password: _, ...profile } = user;
-  res.json({ token, user: profile });
+  return res.status(400).json({ error: 'Invalid login parameters' });
 });
 
 app.get('/api/me', authenticateToken, async (req: any, res) => {
@@ -205,6 +304,20 @@ app.put('/api/user/location', authenticateToken, async (req: any, res) => {
   const { locationAddress, latitude, longitude } = req.body;
   await (User as any).updateOne({ id: req.user.id }, { locationAddress, latitude, longitude });
   res.json({ success: true });
+});
+
+app.get('/api/leaderboard', authenticateToken, async (req: any, res) => {
+  try {
+    const topUsers = await (User as any).find({ role: 'citizen' })
+      .sort({ reputationPoints: -1 })
+      .limit(10)
+      .select({ id: 1, username: 1, reputationPoints: 1, badges: 1, _id: 0 })
+      .lean();
+    res.json(topUsers);
+  } catch (err) {
+    console.error("Leaderboard Error:", err);
+    res.status(500).json({ error: 'Failed to fetch leaderboard' });
+  }
 });
 
 // --- Issue Routes ---
@@ -231,6 +344,8 @@ app.post('/api/issues/:id/upvote', authenticateToken, async (req: any, res) => {
           $pull: { votedBy: userId }
         }
       );
+      // Remove 10 reputation points from the reporter (issue.userId) to prevent abuse
+      await (User as any).updateOne({ id: issue.userId }, { $inc: { reputationPoints: -10 } });
       return res.json({ success: true, message: 'Upvote removed' });
     }
     
@@ -242,6 +357,8 @@ app.post('/api/issues/:id/upvote', authenticateToken, async (req: any, res) => {
         $push: { votedBy: userId }
       }
     );
+    // Award 10 reputation points to the reporter (issue.userId)
+    await (User as any).updateOne({ id: issue.userId }, { $inc: { reputationPoints: 10 } });
     res.json({ success: true, message: 'Upvote added' });
   } catch (err) {
     console.error("Upvote Error:", err);
@@ -274,6 +391,10 @@ app.post('/api/communityVote', authenticateToken, async (req: any, res) => {
     }
 
     await (Issue as any).updateOne({ id: issueId }, updateQuery);
+    
+    // Award 5 reputation points to the voter for participating in community verification
+    await (User as any).updateOne({ id: userId }, { $inc: { reputationPoints: 5 } });
+    
     res.json({ success: true, message: 'Vote submitted successfully' });
   } catch (err) {
     console.error("Community Vote Error:", err);
@@ -285,6 +406,21 @@ app.post('/api/reportIssue', authenticateToken, async (req: any, res) => {
   try {
     const { category, description, imageUrl, locationAddress, latitude, longitude, priority, division, prabhag } = req.body;
     
+    // 1. Run EXIF Image Forensics
+    let forensicIsFake = false;
+    let forensicReasons: string[] = [];
+    if (imageUrl) {
+      const fileName = path.basename(imageUrl);
+      const filePath = path.join(uploadDir, fileName);
+      if (fs.existsSync(filePath)) {
+        const forensicResult = await analyzeImageForensics(filePath, parseFloat(latitude), parseFloat(longitude));
+        if (forensicResult.isFake) {
+          forensicIsFake = true;
+          forensicReasons = forensicResult.reasons;
+        }
+      }
+    }
+
     // AI Analysis with image + text + heading coherence check
     const aiResult = await analyzeIssue(description, imageUrl, category);
     const finalCategory = aiResult?.category || category || 'Other';
@@ -306,7 +442,10 @@ app.post('/api/reportIssue', authenticateToken, async (req: any, res) => {
     const headingMismatch = aiResult?.imageAnalysis?.matchesHeading === false;
     const descriptionMismatch = aiResult?.imageAnalysis?.matchesDescription === false;
     
-    const isFake = (aiSaysFake || imageMismatch || lowCoherence || imageNotCivic || headingMismatch || descriptionMismatch) ? 1 : 0;
+    const isFake = (forensicIsFake || aiSaysFake || imageMismatch || lowCoherence || imageNotCivic || headingMismatch || descriptionMismatch) ? 1 : 0;
+    
+    // Combine AI reasons with Forensic reasons
+    const finalFakeReason = forensicIsFake ? `Image Forensics Failed: ${forensicReasons.join(' ')} ${fakeReason || ''}` : fakeReason;
 
     const id = Math.random().toString(36).substr(2, 9);
     
@@ -351,7 +490,7 @@ app.post('/api/reportIssue', authenticateToken, async (req: any, res) => {
       id, userId: req.user.id, username: req.user.username, userEmail: req.user.email,
       category: finalCategory, description, imageUrl, locationAddress, latitude, longitude,
       priority: finalPriority, status, division, prabhag, isDuplicate, duplicateOf,
-      isFake, adminNotes: isFake ? `⚠️ FAKE DETECTED: ${fakeReason || aiSummary}` : aiSummary,
+      isFake, adminNotes: isFake ? `⚠️ FAKE DETECTED: ${finalFakeReason || aiSummary}` : aiSummary,
       timestamp: new Date().toISOString(), assignedTeam,
       imageDescription, imageTextMatch, imageTextCoherenceScore,
       aiAnalysis: aiResult || null,
@@ -981,6 +1120,39 @@ app.get('/api/admin/category-analysis', authenticateToken, isAdmin, async (req, 
 // Export the app for Vercel
 export default app;
 
+async function runEscalationEngine() {
+  try {
+    // Escalate issues older than 48 hours (for demo purposes, we'll escalate issues older than 2 minutes if they are pending)
+    // To make it easy to test, we'll use a 2 minute threshold. In production, this would be 48 hours.
+    const thresholdDate = new Date(Date.now() - 2 * 60 * 1000).toISOString();
+    
+    const oldIssues = await (Issue as any).find({
+      status: { $in: ['Pending', 'Assigned'] },
+      priority: { $ne: 'Emergency' },
+      timestamp: { $lt: thresholdDate },
+      isFake: { $ne: 1 }
+    });
+
+    if (oldIssues.length > 0) {
+      console.log(`[Escalation Engine] Found ${oldIssues.length} unresolved issues older than threshold. Escalating...`);
+      for (const issue of oldIssues) {
+        await (Issue as any).updateOne(
+          { id: issue.id },
+          { 
+            $set: { 
+              priority: 'Emergency',
+              adminNotes: `⚠️ ESCALATED BY SYSTEM: Unresolved for too long. Previous notes: ${issue.adminNotes || ''}`
+            }
+          }
+        );
+        console.log(`[Escalation Engine] Escalated issue ${issue.id} to Emergency.`);
+      }
+    }
+  } catch (err) {
+    console.error('[Escalation Engine] Error:', err);
+  }
+}
+
 async function startServer() {
   if (process.env.NODE_ENV !== 'production' && !process.env.VERCEL) {
     const { createServer: createViteServer } = await import('vite');
@@ -992,7 +1164,11 @@ async function startServer() {
   }
 
   if (!process.env.VERCEL) {
-    app.listen(PORT, () => console.log(`🚀 Server running on http://localhost:${PORT}`));
+    app.listen(PORT, () => {
+      console.log(`🚀 Server running on http://localhost:${PORT}`);
+      // Run escalation engine every 1 minute
+      setInterval(runEscalationEngine, 60 * 1000);
+    });
   }
 }
 

@@ -487,28 +487,213 @@ const WelcomeScreen = ({ onLogin, onRegister }: any) => {
         </div>
       </nav>
 
-      {/* Hero Section */}
-      <div className="pt-24 pb-16 px-6 max-w-5xl mx-auto text-center">
-        <h1 className="text-5xl md:text-6xl font-black text-slate-900 mb-6 tracking-tight">
-          Greener City <span className="text-slate-900">Together.</span>
-        </h1>
-        <p className="text-lg md:text-xl text-slate-600 max-w-3xl mx-auto mb-10 leading-relaxed font-medium">
-          A smart platform that connects citizens and authorities to resolve civic problems like potholes, garbage, drainage, and streetlights with real-time updates and full transparency.
-        </p>
-        <div className="flex flex-col sm:flex-row items-center justify-center gap-4 mb-20">
-          <button onClick={() => navigate('/user')} className="flex items-center justify-center gap-2 bg-[#00A86B] hover:bg-[#008f5a] text-white px-8 py-4 rounded-xl font-bold text-lg transition-colors shadow-xl shadow-[#00A86B]/30 w-full sm:w-auto">
-            <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"></path></svg>
-            Citizen Portal
-            <ChevronRight size={20} />
-          </button>
-          <button onClick={() => navigate('/admin')} className="flex items-center justify-center gap-2 bg-white hover:bg-slate-50 border border-slate-200 text-slate-800 px-8 py-4 rounded-xl font-bold text-lg transition-colors shadow-sm w-full sm:w-auto">
-            <Eye size={20} className="text-slate-500" />
-            Admin Portal
-          </button>
+      {/* Hero / Timeline Section */}
+      <div className="pt-12 pb-16 px-6 max-w-6xl mx-auto">
+        <div className="flex justify-end mb-16">
+          <div className="text-right flex flex-col items-end">
+            <p className="text-slate-500 font-semibold mb-4 bg-white px-4 py-2 rounded-full shadow-sm border border-slate-100 inline-block">Before login, read the flow below or skip to login 👇</p>
+            <div className="flex flex-col sm:flex-row items-center justify-end gap-3">
+              <button onClick={() => navigate('/user')} className="flex items-center justify-center gap-2 bg-[#00A86B] hover:bg-[#008f5a] text-white px-6 py-3 rounded-xl font-bold transition-colors shadow-lg shadow-[#00A86B]/20 w-full sm:w-auto">
+                <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"></path></svg>
+                Citizen Portal
+                <ChevronRight size={18} />
+              </button>
+              <button onClick={() => navigate('/admin')} className="flex items-center justify-center gap-2 bg-white hover:bg-slate-50 border border-slate-200 text-slate-800 px-6 py-3 rounded-xl font-bold transition-colors shadow-sm w-full sm:w-auto">
+                <Eye size={18} className="text-slate-500" />
+                Admin Portal
+              </button>
+            </div>
+          </div>
         </div>
 
-        {/* Hero Stats */}
-        <div className="grid grid-cols-2 md:grid-cols-4 gap-4 max-w-5xl mx-auto">
+        <div className="max-w-4xl mx-auto relative text-center">
+          {/* Vertical Line */}
+          <div className="absolute left-8 top-0 bottom-0 w-1 bg-[#00A86B]/20 rounded-full md:left-1/2 md:-ml-0.5" />
+
+          {/* Step 1 */}
+          <div className="relative flex flex-col md:flex-row items-start mb-12 group">
+            <div className="absolute left-8 md:left-1/2 w-8 h-8 rounded-full bg-[#00A86B] text-white flex items-center justify-center font-bold text-sm shadow-[0_0_0_8px_#F4FAF7] z-10 transform -translate-x-1/2 md:translate-x-[-50%] group-hover:scale-110 transition-transform">1</div>
+            <div className="ml-16 md:ml-0 md:w-1/2 md:pr-12 text-left md:text-right">
+              <div className="bg-white p-6 rounded-2xl shadow-sm border border-slate-100 hover:shadow-md transition-shadow">
+                <h3 className="text-xl font-bold mb-3 text-slate-800">Citizen Reports an Issue</h3>
+                <p className="text-slate-600 mb-2">The citizen logs into the portal and reports a civic issue by providing:</p>
+                <ul className="text-slate-500 font-medium space-y-1 text-sm inline-block text-left">
+                  <li>• Issue description</li>
+                  <li>• Location</li>
+                  <li>• Photos/Videos (optional)</li>
+                </ul>
+                <p className="text-slate-600 mt-2 font-medium">The issue is published in the Community Feed.</p>
+              </div>
+            </div>
+          </div>
+
+          {/* Step 2 */}
+          <div className="relative flex flex-col md:flex-row items-start justify-end mb-12 group">
+            <div className="absolute left-8 md:left-1/2 w-8 h-8 rounded-full bg-blue-500 text-white flex items-center justify-center font-bold text-sm shadow-[0_0_0_8px_#F4FAF7] z-10 transform -translate-x-1/2 md:translate-x-[-50%] group-hover:scale-110 transition-transform">2</div>
+            <div className="ml-16 md:ml-0 md:w-1/2 md:pl-12 text-left">
+              <div className="bg-white p-6 rounded-2xl shadow-sm border border-slate-100 hover:shadow-md transition-shadow">
+                <h3 className="text-xl font-bold mb-3 text-slate-800">Community Voting</h3>
+                <p className="text-slate-600 mb-2">Citizens living in the same area can view reported issues and upvote issues that affect them. More votes indicate that the issue impacts more people.</p>
+                <p className="text-slate-600 mt-2">The system calculates a Priority Score based on:</p>
+                <ul className="text-slate-500 font-medium space-y-1 text-sm inline-block">
+                  <li>• Number of community votes</li>
+                  <li>• Severity of the issue</li>
+                  <li>• Time since the issue was reported (optional)</li>
+                </ul>
+              </div>
+            </div>
+          </div>
+
+          {/* Step 3 */}
+          <div className="relative flex flex-col md:flex-row items-start mb-12 group">
+            <div className="absolute left-8 md:left-1/2 w-8 h-8 rounded-full bg-slate-900 text-white flex items-center justify-center font-bold text-sm shadow-[0_0_0_8px_#F4FAF7] z-10 transform -translate-x-1/2 md:translate-x-[-50%] group-hover:scale-110 transition-transform">3</div>
+            <div className="ml-16 md:ml-0 md:w-1/2 md:pr-12 text-left md:text-right">
+              <div className="bg-white p-6 rounded-2xl shadow-sm border border-slate-100 hover:shadow-md transition-shadow">
+                <h3 className="text-xl font-bold mb-3 text-slate-800">Admin Dashboard</h3>
+                <p className="text-slate-600 mb-4">The admin logs into the portal and sees all reported issues in their jurisdiction. Issues are automatically sorted by Priority Score (highest priority first).</p>
+                
+                <div className="overflow-hidden rounded-xl border border-slate-200 text-left">
+                  <table className="w-full text-xs">
+                    <thead className="bg-slate-50 text-slate-500 font-bold uppercase tracking-wider">
+                      <tr>
+                        <th className="px-3 py-2 text-left">Rank</th>
+                        <th className="px-3 py-2 text-left">Issue</th>
+                        <th className="px-3 py-2 text-right">Votes</th>
+                        <th className="px-3 py-2 text-right">Priority</th>
+                      </tr>
+                    </thead>
+                    <tbody className="divide-y divide-slate-100 text-slate-600 font-medium bg-white">
+                      <tr><td className="px-3 py-2">1</td><td className="px-3 py-2">Water Pipeline Leakage</td><td className="px-3 py-2 text-right">320</td><td className="px-3 py-2 text-right text-red-500 font-bold">High</td></tr>
+                      <tr><td className="px-3 py-2">2</td><td className="px-3 py-2">Road Potholes</td><td className="px-3 py-2 text-right">275</td><td className="px-3 py-2 text-right text-red-500 font-bold">High</td></tr>
+                      <tr><td className="px-3 py-2">3</td><td className="px-3 py-2">Streetlight Not Working</td><td className="px-3 py-2 text-right">130</td><td className="px-3 py-2 text-right text-amber-500 font-bold">Medium</td></tr>
+                      <tr><td className="px-3 py-2">4</td><td className="px-3 py-2">Garbage Collection Delay</td><td className="px-3 py-2 text-right">75</td><td className="px-3 py-2 text-right text-amber-500 font-bold">Medium</td></tr>
+                      <tr><td className="px-3 py-2">5</td><td className="px-3 py-2">Broken Park Bench</td><td className="px-3 py-2 text-right">20</td><td className="px-3 py-2 text-right text-green-500 font-bold">Low</td></tr>
+                    </tbody>
+                  </table>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          {/* Step 4 */}
+          <div className="relative flex flex-col md:flex-row items-start justify-end mb-12 group">
+            <div className="absolute left-8 md:left-1/2 w-8 h-8 rounded-full bg-emerald-500 text-white flex items-center justify-center font-bold text-sm shadow-[0_0_0_8px_#F4FAF7] z-10 transform -translate-x-1/2 md:translate-x-[-50%] group-hover:scale-110 transition-transform">4</div>
+            <div className="ml-16 md:ml-0 md:w-1/2 md:pl-12 text-left">
+              <div className="bg-white p-6 rounded-2xl shadow-sm border border-slate-100 hover:shadow-md transition-shadow">
+                <h3 className="text-xl font-bold mb-3 text-slate-800">Team Assignment</h3>
+                <p className="text-slate-600 mb-3">The admin assigns the highest-priority issue to the appropriate field team.</p>
+                <p className="text-slate-600 font-medium">Once assigned, the issue status changes to:</p>
+                <div className="mt-2 inline-block px-3 py-1 bg-amber-50 text-amber-600 rounded-full text-sm font-bold border border-amber-200">Status: Under Progress</div>
+              </div>
+            </div>
+          </div>
+
+          {/* Step 5 */}
+          <div className="relative flex flex-col md:flex-row items-start mb-12 group">
+            <div className="absolute left-8 md:left-1/2 w-8 h-8 rounded-full bg-amber-500 text-white flex items-center justify-center font-bold text-sm shadow-[0_0_0_8px_#F4FAF7] z-10 transform -translate-x-1/2 md:translate-x-[-50%] group-hover:scale-110 transition-transform">5</div>
+            <div className="ml-16 md:ml-0 md:w-1/2 md:pr-12 text-left md:text-right">
+              <div className="bg-white p-6 rounded-2xl shadow-sm border border-slate-100 hover:shadow-md transition-shadow">
+                <h3 className="text-xl font-bold mb-3 text-slate-800">Field Team Completes the Work</h3>
+                <p className="text-slate-600 mb-2">The field team resolves the issue and uploads proof of completion (photos, comments, etc.). The admin verifies the work.</p>
+                <p className="text-slate-600 font-medium mt-2">The issue status remains <span className="px-2 py-0.5 bg-amber-50 text-amber-600 rounded font-bold border border-amber-100 text-xs inline-block">Under Progress</span> until the citizen confirms.</p>
+              </div>
+            </div>
+          </div>
+
+          {/* Step 6 */}
+          <div className="relative flex flex-col md:flex-row items-start justify-end mb-12 group">
+            <div className="absolute left-8 md:left-1/2 w-8 h-8 rounded-full bg-blue-600 text-white flex items-center justify-center font-bold text-sm shadow-[0_0_0_8px_#F4FAF7] z-10 transform -translate-x-1/2 md:translate-x-[-50%] group-hover:scale-110 transition-transform">6</div>
+            <div className="ml-16 md:ml-0 md:w-1/2 md:pl-12 text-left">
+              <div className="bg-white p-6 rounded-2xl shadow-sm border border-slate-100 hover:shadow-md transition-shadow">
+                <h3 className="text-xl font-bold mb-3 text-slate-800">Citizen Verification</h3>
+                <p className="text-slate-600 mb-2">The citizen who reported the issue receives a notification.</p>
+                <ul className="text-slate-500 font-medium space-y-1 text-sm inline-block">
+                  <li>• They inspect the work.</li>
+                  <li>• If satisfied, they click "Work Completed".</li>
+                </ul>
+              </div>
+            </div>
+          </div>
+
+          {/* Step 7 */}
+          <div className="relative flex flex-col md:flex-row items-start mb-12 group">
+            <div className="absolute left-8 md:left-1/2 w-8 h-8 rounded-full bg-[#00A86B] text-white flex items-center justify-center font-bold text-sm shadow-[0_0_0_8px_#F4FAF7] z-10 transform -translate-x-1/2 md:translate-x-[-50%] group-hover:scale-110 transition-transform">7</div>
+            <div className="ml-16 md:ml-0 md:w-1/2 md:pr-12 text-left md:text-right">
+              <div className="bg-white p-6 rounded-2xl shadow-sm border border-slate-100 hover:shadow-md transition-shadow">
+                <h3 className="text-xl font-bold mb-3 text-slate-800">Issue Closure</h3>
+                <p className="text-slate-600 mb-2 font-medium">The issue status changes to:</p>
+                <div className="mb-2 inline-block px-3 py-1 bg-emerald-50 text-emerald-600 rounded-full text-sm font-bold border border-emerald-200">Status: Completed</div>
+                <p className="text-slate-600">The complaint is officially closed.</p>
+              </div>
+            </div>
+          </div>
+
+          {/* Step 8 */}
+          <div className="relative flex flex-col md:flex-row items-start justify-end mb-16 group">
+            <div className="absolute left-8 md:left-1/2 w-8 h-8 rounded-full bg-purple-500 text-white flex items-center justify-center font-bold text-sm shadow-[0_0_0_8px_#F4FAF7] z-10 transform -translate-x-1/2 md:translate-x-[-50%] group-hover:scale-110 transition-transform">8</div>
+            <div className="ml-16 md:ml-0 md:w-1/2 md:pl-12 text-left">
+              <div className="bg-white p-6 rounded-2xl shadow-sm border border-slate-100 hover:shadow-md transition-shadow">
+                <h3 className="text-xl font-bold mb-3 text-slate-800">Reward & Leaderboard</h3>
+                <ul className="text-slate-600 font-medium space-y-2 text-sm">
+                  <li>• The reporting citizen earns reward points.</li>
+                  <li>• Citizens who actively vote on genuine issues may also earn small participation points (optional).</li>
+                  <li>• The leaderboard is updated to encourage community participation.</li>
+                </ul>
+              </div>
+            </div>
+          </div>
+          
+        </div>
+        
+        {/* Complete Workflow Flowchart */}
+        <div className="bg-slate-900 rounded-[2rem] p-8 md:p-12 shadow-2xl text-center relative overflow-hidden mt-12 border border-slate-800">
+          <div className="absolute top-0 right-0 w-64 h-64 bg-[#00A86B]/10 rounded-bl-full blur-3xl"></div>
+          <div className="absolute bottom-0 left-0 w-64 h-64 bg-blue-500/10 rounded-tr-full blur-3xl"></div>
+          
+          <h3 className="text-2xl font-bold text-white mb-8 relative z-10">Complete Workflow</h3>
+          <div className="inline-block text-left text-emerald-400 font-mono text-sm sm:text-base leading-loose whitespace-pre relative z-10 mx-auto">
+{`Citizen Reports Issue
+          │
+          ▼
+Issue Published in Community Feed
+          │
+          ▼
+Citizens Vote (Upvote Priority)
+          │
+          ▼
+Priority Score Calculated
+          │
+          ▼
+Admin Dashboard (Issues Sorted by Priority)
+          │
+          ▼
+Admin Assigns Field Team
+          │
+          ▼
+Status → Under Progress
+          │
+          ▼
+Field Team Resolves Issue
+          │
+          ▼
+Admin Verifies Work
+          │
+          ▼
+Citizen Confirms Completion
+          │
+          ▼
+Status → Completed
+          │
+          ▼
+Reward Points + Leaderboard Updated`}
+          </div>
+        </div>
+        
+      </div>
+
+      {/* Hero Stats (Moved below CTA) */}
+      <div className="py-12 bg-white border-t border-slate-100">
+        <div className="grid grid-cols-2 md:grid-cols-4 gap-4 max-w-5xl mx-auto px-6">
           <div className="bg-white p-6 rounded-2xl shadow-[0_4px_20px_-4px_rgba(0,0,0,0.05)] border border-slate-100 flex flex-col items-center justify-center transition-transform hover:-translate-y-1">
             <div className="text-4xl font-black text-[#00A86B] mb-2">{stats.total}</div>
             <div className="text-xs text-slate-500 font-bold uppercase tracking-widest">Total Reports</div>
@@ -524,105 +709,6 @@ const WelcomeScreen = ({ onLogin, onRegister }: any) => {
           <div className="bg-white p-6 rounded-2xl shadow-[0_4px_20px_-4px_rgba(0,0,0,0.05)] border border-slate-100 flex flex-col items-center justify-center transition-transform hover:-translate-y-1">
             <div className="text-4xl font-black text-[#f59e0b] mb-2">{stats.pending}</div>
             <div className="text-xs text-slate-500 font-bold uppercase tracking-widest">Pending</div>
-          </div>
-        </div>
-      </div>
-
-      {/* Dashboard Section */}
-      <div className="bg-white py-24 px-6 border-t border-slate-100">
-        <div className="max-w-6xl mx-auto">
-          <div className="grid grid-cols-1 md:grid-cols-4 gap-6 mb-12">
-            <div className="bg-white p-8 rounded-[2rem] shadow-[0_8px_30px_rgb(0,0,0,0.04)] border border-slate-50 flex flex-col items-center text-center group hover:shadow-[0_8px_40px_rgb(0,0,0,0.08)] transition-all">
-              <div className="w-16 h-16 bg-[#00A86B] rounded-2xl flex items-center justify-center text-white mb-6 transform group-hover:scale-110 transition-transform">
-                <svg className="w-8 h-8" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M13 7h8m0 0v8m0-8l-8 8-4-4-6 6"></path></svg>
-              </div>
-              <div className="text-5xl font-black text-[#00A86B] mb-3">{stats.total}</div>
-              <div className="font-bold text-slate-800 mb-2 text-lg">Total Issues Reported</div>
-              <div className="text-sm text-slate-500 font-medium">Growing community participation</div>
-            </div>
-            
-            <div className="bg-white p-8 rounded-[2rem] shadow-[0_8px_30px_rgb(0,0,0,0.04)] border border-slate-50 flex flex-col items-center text-center group hover:shadow-[0_8px_40px_rgb(0,0,0,0.08)] transition-all">
-              <div className="w-16 h-16 bg-[#00A86B] rounded-2xl flex items-center justify-center text-white mb-6 transform group-hover:scale-110 transition-transform">
-                <CheckCircle2 size={32} />
-              </div>
-              <div className="text-5xl font-black text-[#00A86B] mb-3">{stats.resolved}</div>
-              <div className="font-bold text-slate-800 mb-2 text-lg">Issues Resolved</div>
-              <div className="text-sm text-slate-500 font-medium">Successfully completed</div>
-            </div>
-
-            <div className="bg-white p-8 rounded-[2rem] shadow-[0_8px_30px_rgb(0,0,0,0.04)] border border-slate-50 flex flex-col items-center text-center group hover:shadow-[0_8px_40px_rgb(0,0,0,0.08)] transition-all">
-              <div className="w-16 h-16 bg-[#f05a1a] rounded-2xl flex items-center justify-center text-white mb-6 transform group-hover:scale-110 transition-transform">
-                <User size={32} />
-              </div>
-              <div className="text-5xl font-black text-[#f05a1a] mb-3">{stats.inProgress}</div>
-              <div className="font-bold text-slate-800 mb-2 text-lg">Issues In Progress</div>
-              <div className="text-sm text-slate-500 font-medium">Currently being addressed</div>
-            </div>
-
-            <div className="bg-white p-8 rounded-[2rem] shadow-[0_8px_30px_rgb(0,0,0,0.04)] border border-slate-50 flex flex-col items-center text-center group hover:shadow-[0_8px_40px_rgb(0,0,0,0.08)] transition-all">
-              <div className="w-16 h-16 bg-[#f59e0b] rounded-2xl flex items-center justify-center text-white mb-6 transform group-hover:scale-110 transition-transform">
-                <Clock size={32} />
-              </div>
-              <div className="text-5xl font-black text-[#f59e0b] mb-3">{stats.pending}</div>
-              <div className="font-bold text-slate-800 mb-2 text-lg">Pending Issues</div>
-              <div className="text-sm text-slate-500 font-medium">Awaiting assignment</div>
-            </div>
-          </div>
-
-          <div className="bg-[#00A86B] rounded-[2.5rem] p-12 text-center text-white shadow-2xl shadow-[#00A86B]/30 max-w-3xl mx-auto relative overflow-hidden">
-            <div className="absolute inset-0 opacity-20" style={{ backgroundImage: 'radial-gradient(circle, #fff 2px, transparent 2px)', backgroundSize: '24px 24px' }}></div>
-            <div className="absolute top-[-50%] left-[-10%] w-64 h-64 bg-white/10 blur-[50px] rounded-full"></div>
-            <div className="absolute bottom-[-50%] right-[-10%] w-64 h-64 bg-emerald-900/20 blur-[50px] rounded-full"></div>
-            <div className="relative z-10">
-              <div className="text-8xl font-black mb-4 tracking-tighter">{resolutionRate}%</div>
-              <div className="text-3xl font-bold mb-4">Resolution Rate</div>
-              <p className="text-[#e6f7f0] max-w-md mx-auto text-lg font-medium">
-                Of reported issues successfully resolved by our system
-              </p>
-            </div>
-          </div>
-        </div>
-      </div>
-
-      {/* How it works */}
-      <div className="bg-[#F8FDFB] py-24 px-6 border-t border-slate-100">
-        <div className="max-w-6xl mx-auto">
-          <div className="grid grid-cols-1 md:grid-cols-4 gap-8">
-            <div className="bg-white p-8 rounded-3xl shadow-sm border border-slate-100 relative pt-14 hover:shadow-md transition-shadow">
-              <div className="absolute top-6 right-6 text-6xl font-black text-slate-100">01</div>
-              <div className="w-16 h-16 bg-[#00A86B] rounded-2xl flex items-center justify-center text-white mb-6 relative z-10 shadow-lg shadow-[#00A86B]/20">
-                <svg className="w-8 h-8" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"></path></svg>
-              </div>
-              <h3 className="text-xl font-bold mb-3 text-slate-800 relative z-10">Report an Issue</h3>
-              <p className="text-slate-500 font-medium leading-relaxed relative z-10">Submit details with description, photo, and location through our simple form.</p>
-            </div>
-
-            <div className="bg-white p-8 rounded-3xl shadow-sm border border-slate-100 relative pt-14 hover:shadow-md transition-shadow">
-              <div className="absolute top-6 right-6 text-6xl font-black text-slate-100">02</div>
-              <div className="w-16 h-16 bg-[#f05a1a] rounded-2xl flex items-center justify-center text-white mb-6 relative z-10 shadow-lg shadow-[#f05a1a]/20">
-                <svg className="w-8 h-8" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M4 7v10c0 2.21 3.582 4 8 4s8-1.79 8-4V7M4 7c0 2.21 3.582 4 8 4s8-1.79 8-4M4 7c0-2.21 3.582-4 8-4s8 1.79 8 4m0 5c0 2.21-3.582 4-8 4s-8-1.79-8-4"></path></svg>
-              </div>
-              <h3 className="text-xl font-bold mb-3 text-slate-800 relative z-10">Stored in System</h3>
-              <p className="text-slate-500 font-medium leading-relaxed relative z-10">Issue is recorded in a centralized database for tracking and management.</p>
-            </div>
-
-            <div className="bg-white p-8 rounded-3xl shadow-sm border border-slate-100 relative pt-14 hover:shadow-md transition-shadow">
-              <div className="absolute top-6 right-6 text-6xl font-black text-slate-100">03</div>
-              <div className="w-16 h-16 bg-[#f05a1a] rounded-2xl flex items-center justify-center text-white mb-6 relative z-10 shadow-lg shadow-[#f05a1a]/20">
-                <Bell size={32} />
-              </div>
-              <h3 className="text-xl font-bold mb-3 text-slate-800 relative z-10">Authorities Take Action</h3>
-              <p className="text-slate-500 font-medium leading-relaxed relative z-10">Concerned department is automatically notified and assigned the issue.</p>
-            </div>
-
-            <div className="bg-white p-8 rounded-3xl shadow-sm border border-slate-100 relative pt-14 hover:shadow-md transition-shadow">
-              <div className="absolute top-6 right-6 text-6xl font-black text-slate-100">04</div>
-              <div className="w-16 h-16 bg-[#00A86B] rounded-2xl flex items-center justify-center text-white mb-6 relative z-10 shadow-lg shadow-[#00A86B]/20">
-                <CheckCircle2 size={32} />
-              </div>
-              <h3 className="text-xl font-bold mb-3 text-slate-800 relative z-10">Track & Resolve</h3>
-              <p className="text-slate-500 font-medium leading-relaxed relative z-10">Citizen receives real-time updates until the issue is completely resolved.</p>
-            </div>
           </div>
         </div>
       </div>
@@ -658,7 +744,6 @@ const WelcomeScreen = ({ onLogin, onRegister }: any) => {
             <h3 className="font-bold text-slate-800 mb-3 text-lg">Admin Dashboard</h3>
             <p className="text-sm text-slate-500 font-medium leading-relaxed">Comprehensive dashboard for authorities to manage and resolve issues.</p>
           </div>
-          
           <div className="bg-white p-8 rounded-3xl shadow-[0_2px_20px_-3px_rgba(0,0,0,0.05)] border border-slate-100 hover:border-[#00A86B]/30 transition-colors">
             <div className="w-12 h-12 bg-[#e6f7f0] text-[#00A86B] rounded-xl flex items-center justify-center mb-6">
               <Bell size={24} />
@@ -692,7 +777,6 @@ const WelcomeScreen = ({ onLogin, onRegister }: any) => {
     </div>
   );
 };
-
 const LocationSetup = ({ onComplete }: any) => {
   const [address, setAddress] = useState('');
   const [loading, setLoading] = useState(false);

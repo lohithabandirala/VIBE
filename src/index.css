@@ -1,29 +1,47 @@
-@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Space+Grotesk:wght@500;700&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700;800;900&family=Plus+Jakarta+Sans:wght@400;500;600;700&display=swap');
 @import "tailwindcss";
 
 @theme {
-  --font-sans: "Inter", ui-sans-serif, system-ui, sans-serif;
-  --font-display: "Space Grotesk", sans-serif;
+  --font-sans: "Plus Jakarta Sans", ui-sans-serif, system-ui, sans-serif;
+  --font-display: "Outfit", sans-serif;
   
-  --color-civic-primary: #2563eb;
-  --color-civic-secondary: #10b981;
-  --color-civic-accent: #f59e0b;
-  --color-civic-danger: #ef4444;
+  --color-civic-primary: #4f46e5;
+  --color-civic-primary-hover: #4338ca;
+  --color-civic-secondary: #0ea5e9;
+  --color-civic-accent: #8b5cf6;
+  --color-civic-danger: #f43f5e;
+  --color-civic-success: #10b981;
 }
 
 @layer base {
   body {
-    @apply bg-slate-50 text-slate-900 font-sans;
+    @apply bg-slate-50 text-slate-900 font-sans antialiased selection:bg-civic-primary/20;
+    /* Soft mesh gradient background */
+    background-image: 
+      radial-gradient(at 0% 0%, hsla(253,16%,7%,0) 0, transparent 50%), 
+      radial-gradient(at 50% 0%, hsla(225,39%,30%,0) 0, transparent 50%), 
+      radial-gradient(at 100% 0%, hsla(339,49%,30%,0) 0, transparent 50%);
   }
 }
 
-.glass-card {
-  @apply bg-white/80 backdrop-blur-md border border-white/20 shadow-sm;
+@layer components {
+  .glass-panel {
+    @apply bg-white/70 backdrop-blur-xl border border-white/50 shadow-[0_8px_30px_rgb(0,0,0,0.04)] rounded-3xl;
+  }
+  
+  .modern-input {
+    @apply w-full px-5 py-4 rounded-2xl border border-slate-200 bg-white/50 backdrop-blur-sm outline-none focus:ring-4 focus:ring-civic-primary/10 focus:border-civic-primary focus:bg-white transition-all text-sm font-semibold text-slate-800 placeholder:text-slate-400;
+  }
+  
+  .btn-primary {
+    @apply px-6 py-4 rounded-2xl bg-gradient-to-r from-civic-primary to-civic-accent text-white font-bold tracking-wide shadow-lg shadow-civic-primary/30 hover:shadow-civic-primary/50 hover:-translate-y-0.5 transition-all active:scale-95 disabled:opacity-50 disabled:pointer-events-none;
+  }
 }
 
 .leaflet-container {
   width: 100%;
   height: 100%;
-  border-radius: 0.75rem;
+  border-radius: 1.5rem;
+  z-index: 10;
 }
 
