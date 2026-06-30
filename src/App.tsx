@@ -226,7 +226,7 @@ export default function App({ forcePortal }: { forcePortal?: 'user' | 'admin' } 
               if (!userData.latitude && view !== 'location-setup') {
                 setView('location-setup');
               } else {
-                setView(userData.role === 'admin' ? 'admin-dashboard' : 'dashboard');
+                setView(userData.role === 'admin' ? 'admin-dashboard' : 'report');
               }
             } else {
               localStorage.removeItem('civic_token');
@@ -489,16 +489,17 @@ const WelcomeScreen = ({ onLogin, onRegister }: any) => {
 
       {/* Hero / Timeline Section */}
       <div className="pt-12 pb-16 px-6 max-w-6xl mx-auto">
-        <div className="flex justify-end mb-16">
-          <div className="text-right flex flex-col items-end">
-            <p className="text-slate-500 font-semibold mb-4 bg-white px-4 py-2 rounded-full shadow-sm border border-slate-100 inline-block">Before login, read the flow below or skip to login 👇</p>
-            <div className="flex flex-col sm:flex-row items-center justify-end gap-3">
-              <button onClick={() => navigate('/user')} className="flex items-center justify-center gap-2 bg-[#00A86B] hover:bg-[#008f5a] text-white px-6 py-3 rounded-xl font-bold transition-colors shadow-lg shadow-[#00A86B]/20 w-full sm:w-auto">
+        {/* Mobile Login Buttons */}
+        <div className="flex md:hidden justify-center mb-12">
+          <div className="text-center flex flex-col items-center">
+            <p className="text-slate-500 font-semibold mb-4 bg-white px-4 py-2 rounded-full shadow-sm border border-slate-100 inline-block text-sm">Before login, read the flow below or skip to login 👇</p>
+            <div className="flex flex-col w-full gap-3">
+              <button onClick={() => navigate('/user')} className="flex items-center justify-center gap-2 bg-[#00A86B] hover:bg-[#008f5a] text-white px-6 py-3 rounded-xl font-bold transition-colors shadow-lg shadow-[#00A86B]/20 w-full">
                 <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"></path></svg>
                 Citizen Portal
                 <ChevronRight size={18} />
               </button>
-              <button onClick={() => navigate('/admin')} className="flex items-center justify-center gap-2 bg-white hover:bg-slate-50 border border-slate-200 text-slate-800 px-6 py-3 rounded-xl font-bold transition-colors shadow-sm w-full sm:w-auto">
+              <button onClick={() => navigate('/admin')} className="flex items-center justify-center gap-2 bg-white hover:bg-slate-50 border border-slate-200 text-slate-800 px-6 py-3 rounded-xl font-bold transition-colors shadow-sm w-full">
                 <Eye size={18} className="text-slate-500" />
                 Admin Portal
               </button>
@@ -523,6 +524,22 @@ const WelcomeScreen = ({ onLogin, onRegister }: any) => {
                   <li>• Photos/Videos (optional)</li>
                 </ul>
                 <p className="text-slate-600 mt-2 font-medium">The issue is published in the Community Feed.</p>
+                <img src="/citizen_reporting.png" alt="Citizen reporting an issue" className="w-full rounded-xl mt-4 object-cover border border-slate-100 shadow-sm" />
+              </div>
+            </div>
+            {/* Desktop Login Buttons */}
+            <div className="hidden md:flex md:w-1/2 md:pl-12 flex-col items-end pt-4">
+              <p className="text-slate-500 font-semibold mb-4 bg-white px-4 py-2 rounded-full shadow-sm border border-slate-100 inline-block text-sm">Before login, read the flow below or skip to login 👇</p>
+              <div className="flex flex-col sm:flex-row items-center justify-end gap-3 w-full">
+                <button onClick={() => navigate('/user')} className="flex items-center justify-center gap-2 bg-[#00A86B] hover:bg-[#008f5a] text-white px-6 py-3 rounded-xl font-bold transition-colors shadow-lg shadow-[#00A86B]/20 w-full sm:w-auto">
+                  <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"></path></svg>
+                  Citizen Portal
+                  <ChevronRight size={18} />
+                </button>
+                <button onClick={() => navigate('/admin')} className="flex items-center justify-center gap-2 bg-white hover:bg-slate-50 border border-slate-200 text-slate-800 px-6 py-3 rounded-xl font-bold transition-colors shadow-sm w-full sm:w-auto">
+                  <Eye size={18} className="text-slate-500" />
+                  Admin Portal
+                </button>
               </div>
             </div>
           </div>
@@ -540,6 +557,7 @@ const WelcomeScreen = ({ onLogin, onRegister }: any) => {
                   <li>• Severity of the issue</li>
                   <li>• Time since the issue was reported (optional)</li>
                 </ul>
+                <img src="/step2_voting_1782795695974.png" alt="Community Voting" className="w-full rounded-xl mt-4 object-cover border border-slate-100 shadow-sm" />
               </div>
             </div>
           </div>
@@ -571,6 +589,7 @@ const WelcomeScreen = ({ onLogin, onRegister }: any) => {
                     </tbody>
                   </table>
                 </div>
+                <img src="/step3_admin_1782795707685.png" alt="Admin Dashboard" className="w-full rounded-xl mt-4 object-cover border border-slate-100 shadow-sm" />
               </div>
             </div>
           </div>
@@ -584,6 +603,7 @@ const WelcomeScreen = ({ onLogin, onRegister }: any) => {
                 <p className="text-slate-600 mb-3">The admin assigns the highest-priority issue to the appropriate field team.</p>
                 <p className="text-slate-600 font-medium">Once assigned, the issue status changes to:</p>
                 <div className="mt-2 inline-block px-3 py-1 bg-amber-50 text-amber-600 rounded-full text-sm font-bold border border-amber-200">Status: Under Progress</div>
+                <img src="/step4_assignment_1782795719105.png" alt="Team Assignment" className="w-full rounded-xl mt-4 object-cover border border-slate-100 shadow-sm" />
               </div>
             </div>
           </div>
@@ -596,6 +616,7 @@ const WelcomeScreen = ({ onLogin, onRegister }: any) => {
                 <h3 className="text-xl font-bold mb-3 text-slate-800">Field Team Completes the Work</h3>
                 <p className="text-slate-600 mb-2">The field team resolves the issue and uploads proof of completion (photos, comments, etc.). The admin verifies the work.</p>
                 <p className="text-slate-600 font-medium mt-2">The issue status remains <span className="px-2 py-0.5 bg-amber-50 text-amber-600 rounded font-bold border border-amber-100 text-xs inline-block">Under Progress</span> until the citizen confirms.</p>
+                <img src="/step5_worker_1782795729199.png" alt="Field Team Completes the Work" className="w-full rounded-xl mt-4 object-cover border border-slate-100 shadow-sm" />
               </div>
             </div>
           </div>
@@ -611,6 +632,7 @@ const WelcomeScreen = ({ onLogin, onRegister }: any) => {
                   <li>• They inspect the work.</li>
                   <li>• If satisfied, they click "Work Completed".</li>
                 </ul>
+                <img src="/step6_verification_1782795738607.png" alt="Citizen Verification" className="w-full rounded-xl mt-4 object-cover border border-slate-100 shadow-sm" />
               </div>
             </div>
           </div>
@@ -624,6 +646,7 @@ const WelcomeScreen = ({ onLogin, onRegister }: any) => {
                 <p className="text-slate-600 mb-2 font-medium">The issue status changes to:</p>
                 <div className="mb-2 inline-block px-3 py-1 bg-emerald-50 text-emerald-600 rounded-full text-sm font-bold border border-emerald-200">Status: Completed</div>
                 <p className="text-slate-600">The complaint is officially closed.</p>
+                <img src="/step7_closure_1782795747511.png" alt="Issue Closure" className="w-full rounded-xl mt-4 object-cover border border-slate-100 shadow-sm" />
               </div>
             </div>
           </div>
@@ -639,6 +662,7 @@ const WelcomeScreen = ({ onLogin, onRegister }: any) => {
                   <li>• Citizens who actively vote on genuine issues may also earn small participation points (optional).</li>
                   <li>• The leaderboard is updated to encourage community participation.</li>
                 </ul>
+                <img src="/step8_reward_1782795757203.png" alt="Reward & Leaderboard" className="w-full rounded-xl mt-4 object-cover border border-slate-100 shadow-sm" />
               </div>
             </div>
           </div>
@@ -963,10 +987,41 @@ const LocationSetup = ({ onComplete }: any) => {
 };
 
 const AuthScreen = ({ isLoginView, toggleView, onBack, forcedPortal }: any) => {
-  const [formData, setFormData] = useState({ username: '', email: '', password: '' });
+  const [formData, setFormData] = useState({ 
+    username: '', email: '', password: '', 
+    otp: '', fullName: '', address: '', city: '', postalCode: '' 
+  });
   const [error, setError] = useState('');
   const [loading, setLoading] = useState(false);
   const [isAdminPortal, setIsAdminPortal] = useState(forcedPortal === 'admin');
+  const [otpSent, setOtpSent] = useState(false);
+  const [sendingOtp, setSendingOtp] = useState(false);
+
+  const handleSendOtp = async () => {
+    if (!formData.email) {
+      setError('Please enter your email address first.');
+      return;
+    }
+    setError('');
+    setSendingOtp(true);
+    try {
+      const res = await fetch('/api/send-email-otp', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ email: formData.email })
+      });
+      const data = await safeJson(res);
+      if (res.ok && data) {
+        setOtpSent(true);
+      } else {
+        setError(data?.error || 'Failed to send OTP');
+      }
+    } catch (err: any) {
+      setError(err.message);
+    } finally {
+      setSendingOtp(false);
+    }
+  };
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -1039,52 +1094,147 @@ const AuthScreen = ({ isLoginView, toggleView, onBack, forcedPortal }: any) => {
             )}
             
             <div className="space-y-4">
-              <div className="space-y-2">
-                <label className={cn("block text-[10px] font-black uppercase tracking-widest", isAdminPortal ? "text-slate-500" : "text-slate-400")}>Username</label>
-                <input 
-                  type="text" 
-                  required 
-                  className={cn("w-full px-5 py-4 rounded-2xl border outline-none focus:ring-4 transition-all text-sm font-bold", isAdminPortal ? "bg-slate-900/50 border-slate-700 focus:ring-red-500/10 focus:border-red-500 text-white placeholder:text-slate-600" : "bg-slate-50 border-slate-100 focus:ring-civic-primary/10 focus:border-civic-primary")}
-                  value={formData.username}
-                  onChange={e => setFormData({ ...formData, username: e.target.value })}
-                  placeholder="Enter your system username"
-                />
-              </div>
+              {isAdminPortal ? (
+                <>
+                  <div className="space-y-2">
+                    <label className="block text-[10px] font-black uppercase tracking-widest text-slate-500">Username</label>
+                    <input 
+                      type="text" 
+                      required 
+                      className="w-full px-5 py-4 rounded-2xl border outline-none focus:ring-4 transition-all text-sm font-bold bg-slate-900/50 border-slate-700 focus:ring-red-500/10 focus:border-red-500 text-white placeholder:text-slate-600"
+                      value={formData.username}
+                      onChange={e => setFormData({ ...formData, username: e.target.value })}
+                      placeholder="Enter your system username"
+                    />
+                  </div>
+                  <div className="space-y-2">
+                    <label className="block text-[10px] font-black uppercase tracking-widest text-slate-500">Password</label>
+                    <input 
+                      type="password" 
+                      required 
+                      className="w-full px-5 py-4 rounded-2xl border outline-none focus:ring-4 transition-all text-sm font-bold bg-slate-900/50 border-slate-700 focus:ring-red-500/10 focus:border-red-500 text-white"
+                      value={formData.password}
+                      onChange={e => setFormData({ ...formData, password: e.target.value })}
+                      placeholder="••••••••"
+                    />
+                  </div>
+                </>
+              ) : (
+                <>
+                  <div className="space-y-2">
+                    <label className="block text-[10px] font-black uppercase tracking-widest text-slate-400">Email Address</label>
+                    <input 
+                      type="email" 
+                      required 
+                      disabled={otpSent}
+                      className="w-full px-5 py-4 rounded-2xl border border-slate-100 bg-slate-50 outline-none focus:ring-4 focus:ring-civic-primary/10 focus:border-civic-primary transition-all text-sm font-bold disabled:opacity-50"
+                      value={formData.email}
+                      onChange={e => setFormData({ ...formData, email: e.target.value })}
+                      placeholder="name@example.com"
+                    />
+                  </div>
 
-              {!isLoginView && !isAdminPortal && (
-                <div className="space-y-2">
-                  <label className="block text-[10px] font-black uppercase tracking-widest text-slate-400">Email Address</label>
-                  <input 
-                    type="email" 
-                    required 
-                    className="w-full px-5 py-4 rounded-2xl border border-slate-100 bg-slate-50 outline-none focus:ring-4 focus:ring-civic-primary/10 focus:border-civic-primary transition-all text-sm font-bold"
-                    value={formData.email}
-                    onChange={e => setFormData({ ...formData, email: e.target.value })}
-                    placeholder="name@example.com"
-                  />
-                </div>
+                  {!isLoginView && (
+                    <>
+                      <div className="space-y-2">
+                        <label className="block text-[10px] font-black uppercase tracking-widest text-slate-400">Full Name</label>
+                        <input 
+                          type="text" 
+                          required 
+                          disabled={otpSent}
+                          className="w-full px-5 py-4 rounded-2xl border border-slate-100 bg-slate-50 outline-none focus:ring-4 focus:ring-civic-primary/10 focus:border-civic-primary transition-all text-sm font-bold disabled:opacity-50"
+                          value={formData.fullName}
+                          onChange={e => setFormData({ ...formData, fullName: e.target.value })}
+                          placeholder="Your Full Name"
+                        />
+                      </div>
+                      <div className="space-y-2">
+                        <label className="block text-[10px] font-black uppercase tracking-widest text-slate-400">Address</label>
+                        <input 
+                          type="text" 
+                          required 
+                          disabled={otpSent}
+                          className="w-full px-5 py-4 rounded-2xl border border-slate-100 bg-slate-50 outline-none focus:ring-4 focus:ring-civic-primary/10 focus:border-civic-primary transition-all text-sm font-bold disabled:opacity-50"
+                          value={formData.address}
+                          onChange={e => setFormData({ ...formData, address: e.target.value })}
+                          placeholder="Street Address"
+                        />
+                      </div>
+                      <div className="grid grid-cols-2 gap-4">
+                        <div className="space-y-2">
+                          <label className="block text-[10px] font-black uppercase tracking-widest text-slate-400">City</label>
+                          <input 
+                            type="text" 
+                            required 
+                            disabled={otpSent}
+                            className="w-full px-5 py-4 rounded-2xl border border-slate-100 bg-slate-50 outline-none focus:ring-4 focus:ring-civic-primary/10 focus:border-civic-primary transition-all text-sm font-bold disabled:opacity-50"
+                            value={formData.city}
+                            onChange={e => setFormData({ ...formData, city: e.target.value })}
+                            placeholder="City"
+                          />
+                        </div>
+                        <div className="space-y-2">
+                          <label className="block text-[10px] font-black uppercase tracking-widest text-slate-400">Postal Code</label>
+                          <input 
+                            type="text" 
+                            required 
+                            disabled={otpSent}
+                            className="w-full px-5 py-4 rounded-2xl border border-slate-100 bg-slate-50 outline-none focus:ring-4 focus:ring-civic-primary/10 focus:border-civic-primary transition-all text-sm font-bold disabled:opacity-50"
+                            value={formData.postalCode}
+                            onChange={e => setFormData({ ...formData, postalCode: e.target.value })}
+                            placeholder="Postal Code"
+                          />
+                        </div>
+                      </div>
+                    </>
+                  )}
+
+                  {otpSent && (
+                    <div className="space-y-2">
+                      <label className="block text-[10px] font-black uppercase tracking-widest text-slate-400">Verification Code (OTP)</label>
+                      <input 
+                        type="text" 
+                        required 
+                        className="w-full px-5 py-4 rounded-2xl border border-slate-100 bg-slate-50 outline-none focus:ring-4 focus:ring-civic-primary/10 focus:border-civic-primary transition-all text-sm font-bold tracking-[0.5em] text-center"
+                        value={formData.otp}
+                        onChange={e => setFormData({ ...formData, otp: e.target.value })}
+                        placeholder="123456"
+                        maxLength={6}
+                      />
+                    </div>
+                  )}
+                </>
               )}
-
-              <div className="space-y-2">
-                <label className={cn("block text-[10px] font-black uppercase tracking-widest", isAdminPortal ? "text-slate-500" : "text-slate-400")}>Password</label>
-                <input 
-                  type="password" 
-                  required 
-                  className={cn("w-full px-5 py-4 rounded-2xl border outline-none focus:ring-4 transition-all text-sm font-bold", isAdminPortal ? "bg-slate-900/50 border-slate-700 focus:ring-red-500/10 focus:border-red-500 text-white" : "bg-slate-50 border-slate-100 focus:ring-civic-primary/10 focus:border-civic-primary")}
-                  value={formData.password}
-                  onChange={e => setFormData({ ...formData, password: e.target.value })}
-                  placeholder="••••••••"
-                />
-              </div>
             </div>
 
-            <Button 
-              type="submit" 
-              disabled={loading} 
-              className={cn("w-full py-5 rounded-[1.5rem] shadow-2xl text-lg font-black uppercase tracking-wider transition-all active:scale-95", isAdminPortal ? "bg-red-500 hover:bg-red-600 shadow-red-500/20" : "bg-civic-primary hover:bg-blue-600 shadow-civic-primary/20")}
-            >
-              {loading ? 'Authenticating...' : (isLoginView ? 'System Login' : 'Register Account')}
-            </Button>
+            {isAdminPortal ? (
+              <Button 
+                type="submit" 
+                disabled={loading} 
+                className="w-full py-5 rounded-[1.5rem] shadow-2xl text-lg font-black uppercase tracking-wider transition-all active:scale-95 bg-red-500 hover:bg-red-600 shadow-red-500/20"
+              >
+                {loading ? 'Authenticating...' : 'System Login'}
+              </Button>
+            ) : (
+              !otpSent ? (
+                <Button 
+                  type="button" 
+                  onClick={handleSendOtp}
+                  disabled={sendingOtp} 
+                  className="w-full py-5 rounded-[1.5rem] shadow-2xl text-lg font-black uppercase tracking-wider transition-all active:scale-95 bg-civic-primary hover:bg-blue-600 shadow-civic-primary/20"
+                >
+                  {sendingOtp ? 'Sending OTP...' : 'Send Verification Code'}
+                </Button>
+              ) : (
+                <Button 
+                  type="submit" 
+                  disabled={loading} 
+                  className="w-full py-5 rounded-[1.5rem] shadow-2xl text-lg font-black uppercase tracking-wider transition-all active:scale-95 bg-civic-primary hover:bg-blue-600 shadow-civic-primary/20"
+                >
+                  {loading ? 'Authenticating...' : (isLoginView ? 'System Login' : 'Register Account')}
+                </Button>
+              )
+            )}
             
             <div className="flex flex-col gap-4 text-center">
               {(!isAdminPortal || !forcedPortal) && (
@@ -2014,7 +2164,7 @@ const ReportForm = ({ user, onSuccess }: any) => {
   };
 
   return (
-    <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} className="max-w-5xl mx-auto">
+    <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} className="max-w-2xl mx-auto">
       <div className="flex items-center justify-between mb-8">
         <div>
           <h2 className="text-3xl font-display font-bold text-slate-900">Report a Civic Issue</h2>
@@ -2027,155 +2177,44 @@ const ReportForm = ({ user, onSuccess }: any) => {
       </div>
       
       <Card className="p-0 overflow-hidden">
-        <form onSubmit={handleSubmit} className="flex flex-col lg:flex-row divide-y lg:divide-y-0 lg:divide-x divide-slate-100">
-          <div className="lg:w-1/2 p-8 space-y-6">
-            <div className="grid grid-cols-2 gap-4">
-              <div className="space-y-1.5">
-                <label className="block text-xs font-bold text-slate-400 uppercase tracking-widest">Category</label>
-                <select 
-                  className="w-full px-4 py-3 rounded-2xl border border-slate-200 outline-none focus:ring-4 focus:ring-civic-primary/10 focus:border-civic-primary transition-all text-sm font-medium"
-                  value={formData.category}
-                  onChange={e => setFormData({ ...formData, category: e.target.value })}
-                >
-                  {categories.map(c => <option key={c} value={c}>{c}</option>)}
-                </select>
-              </div>
-              <div className="space-y-1.5">
-                <label className="block text-xs font-bold text-slate-400 uppercase tracking-widest">Priority</label>
-                <div className="flex gap-2">
-                  {priorities.map(p => (
-                    <button
-                      key={p}
-                      type="button"
-                      onClick={() => setFormData({ ...formData, priority: p })}
-                      className={cn(
-                        "flex-1 px-3 py-3 rounded-2xl border-2 text-[10px] font-black uppercase tracking-widest transition-all",
-                        formData.priority === p 
-                          ? (p === 'Emergency' ? "bg-red-500 border-red-500 text-white shadow-lg shadow-red-500/20" : 
-                             p === 'High' ? "bg-orange-500 border-orange-500 text-white shadow-lg shadow-orange-500/20" : 
-                             "bg-blue-500 border-blue-500 text-white shadow-lg shadow-blue-500/20")
-                          : "bg-white border-slate-100 text-slate-400 hover:border-slate-200"
-                      )}
-                    >
-                      {p}
-                    </button>
-                  ))}
-                </div>
-              </div>
-            </div>
+        <form onSubmit={handleSubmit} className="p-8 space-y-6">
+          <div className="space-y-1.5">
+            <label className="block text-xs font-bold text-slate-400 uppercase tracking-widest">Description</label>
+            <textarea 
+              required
+              rows={6}
+              className="w-full px-4 py-3 rounded-2xl border border-slate-200 outline-none focus:ring-4 focus:ring-civic-primary/10 focus:border-civic-primary transition-all text-sm font-medium"
+              placeholder="Describe the issue in detail... (what, where, how severe)"
+              value={formData.description}
+              onChange={e => setFormData({ ...formData, description: e.target.value })}
+            />
+          </div>
 
-            <div className="grid grid-cols-2 gap-4">
-              <div className="space-y-1.5">
-                <label className="block text-xs font-bold text-slate-400 uppercase tracking-widest">Division</label>
-                <select 
-                  className="w-full px-4 py-3 rounded-2xl border border-slate-200 outline-none focus:ring-4 focus:ring-civic-primary/10 focus:border-civic-primary transition-all text-sm font-medium"
-                  value={formData.division}
-                  onChange={e => setFormData({ ...formData, division: e.target.value })}
-                >
-                  {['Nashik Road', 'Panchavati', 'CIDCO', 'Satpur', 'Nashik West', 'Nashik East'].map(c => <option key={c} value={c}>{c}</option>)}
-                </select>
-              </div>
-              <div className="space-y-1.5">
-                <label className="block text-xs font-bold text-slate-400 uppercase tracking-widest">Prabhag</label>
-                <select 
-                  className="w-full px-4 py-3 rounded-2xl border border-slate-200 outline-none focus:ring-4 focus:ring-civic-primary/10 focus:border-civic-primary transition-all text-sm font-medium"
-                  value={formData.prabhag}
-                  onChange={e => setFormData({ ...formData, prabhag: e.target.value })}
-                >
-                  {[...Array(31)].map((_, i) => <option key={i+1} value={(i+1).toString()}>{i+1}</option>)}
-                </select>
-              </div>
-            </div>
-            
-            <div className="space-y-1.5">
-              <label className="block text-xs font-bold text-slate-400 uppercase tracking-widest">Description</label>
-              <textarea 
-                required
-                rows={4}
-                className="w-full px-4 py-3 rounded-2xl border border-slate-200 outline-none focus:ring-4 focus:ring-civic-primary/10 focus:border-civic-primary transition-all text-sm font-medium"
-                placeholder="Describe the issue in detail..."
-                value={formData.description}
-                onChange={e => setFormData({ ...formData, description: e.target.value })}
+          <div className="space-y-1.5">
+            <label className="block text-xs font-bold text-slate-400 uppercase tracking-widest">Upload Photo</label>
+            <div className={cn(
+              "border-2 border-dashed rounded-2xl p-8 text-center transition-all cursor-pointer relative group",
+              image ? "border-emerald-200 bg-emerald-50/30" : "border-slate-200 hover:border-civic-primary hover:bg-slate-50"
+            )}>
+              <input 
+                type="file" 
+                accept="image/*" 
+                className="absolute inset-0 opacity-0 cursor-pointer"
+                onChange={e => setImage(e.target.files?.[0] || null)}
               />
-            </div>
-
-            <div className="space-y-1.5">
-              <label className="block text-xs font-bold text-slate-400 uppercase tracking-widest">Upload Photo</label>
-              <div className={cn(
-                "border-2 border-dashed rounded-2xl p-8 text-center transition-all cursor-pointer relative group",
-                image ? "border-emerald-200 bg-emerald-50/30" : "border-slate-200 hover:border-civic-primary hover:bg-slate-50"
-              )}>
-                <input 
-                  type="file" 
-                  accept="image/*" 
-                  className="absolute inset-0 opacity-0 cursor-pointer"
-                  onChange={e => setImage(e.target.files?.[0] || null)}
-                />
-                <Camera className={cn("mx-auto mb-2 transition-colors", image ? "text-emerald-500" : "text-slate-400 group-hover:text-civic-primary")} size={32} />
-                <p className={cn("text-sm font-medium", image ? "text-emerald-700" : "text-slate-500")}>
-                  {image ? image.name : 'Click or drag to upload issue photo'}
-                </p>
-                {image && <p className="text-[10px] text-emerald-500 mt-1">Photo attached successfully</p>}
-              </div>
-            </div>
-
-            <div className="flex gap-4 pt-4">
-              <Button variant="outline" type="button" onClick={() => onSuccess()} className="flex-1 rounded-2xl py-4">Cancel</Button>
-              <Button type="submit" disabled={loading} className="flex-[2] rounded-2xl py-4 shadow-xl shadow-civic-primary/20">
-                {loading ? 'Submitting...' : 'Submit Report'}
-              </Button>
+              <Camera className={cn("mx-auto mb-2 transition-colors", image ? "text-emerald-500" : "text-slate-400 group-hover:text-civic-primary")} size={32} />
+              <p className={cn("text-sm font-medium", image ? "text-emerald-700" : "text-slate-500")}>
+                {image ? image.name : 'Click or drag to upload issue photo'}
+              </p>
+              {image && <p className="text-[10px] text-emerald-500 mt-1">Photo attached successfully</p>}
             </div>
           </div>
 
-          <div className="lg:w-1/2 bg-slate-50 p-8 space-y-6">
-            <div className="flex items-center justify-between">
-              <label className="block text-xs font-bold text-slate-400 uppercase tracking-widest">Issue Location</label>
-              <button 
-                type="button" 
-                onClick={detectLocation}
-                className="text-[10px] font-black text-civic-primary hover:text-blue-700 flex items-center gap-1.5 uppercase tracking-tighter"
-                disabled={locating}
-              >
-                <MapPin size={12} />
-                {locating ? 'Detecting...' : 'Detect My Location'}
-              </button>
-            </div>
-            
-            <div className="relative flex gap-2">
-              <div className="relative flex-1">
-                <MapPin className="absolute left-4 top-1/2 -translate-y-1/2 text-slate-400" size={16} />
-                <input 
-                  type="text"
-                  placeholder="Street address or landmark..."
-                  className="w-full pl-11 pr-4 py-3 rounded-2xl border border-slate-200 outline-none focus:ring-4 focus:ring-civic-primary/10 focus:border-civic-primary transition-all text-sm font-medium"
-                  value={formData.locationAddress}
-                  onChange={e => setFormData({ ...formData, locationAddress: e.target.value })}
-                  onKeyDown={e => e.key === 'Enter' && (e.preventDefault(), searchAddress())}
-                />
-              </div>
-              <Button type="button" onClick={searchAddress} disabled={locating} className="px-6 rounded-2xl">
-                Search
-              </Button>
-            </div>
-
-            <div className="h-[400px] rounded-[2rem] overflow-hidden border-4 border-white shadow-2xl relative">
-              <MapContainer 
-                center={[
-                  parseFloat(formData.latitude as any) || 17.3850, 
-                  parseFloat(formData.longitude as any) || 78.4867
-                ]} 
-                zoom={13} 
-                style={{ height: '100%' }}
-              >
-                <TileLayer url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png" />
-                <LocationPicker />
-              </MapContainer>
-              <div className="absolute bottom-4 left-4 right-4 bg-white/90 backdrop-blur-md p-3 rounded-2xl border border-white shadow-lg z-[1000]">
-                <p className="text-[10px] font-bold text-slate-600 text-center">
-                  📍 Drag the marker to the exact spot of the issue
-                </p>
-              </div>
-            </div>
+          <div className="flex gap-4 pt-4">
+            <Button variant="outline" type="button" onClick={() => onSuccess()} className="flex-1 rounded-2xl py-4">Cancel</Button>
+            <Button type="submit" disabled={loading} className="flex-[2] rounded-2xl py-4 shadow-xl shadow-civic-primary/20">
+              {loading ? 'Submitting...' : 'Submit Report'}
+            </Button>
           </div>
         </form>
       </Card>
