@@ -233,11 +233,9 @@ app.post('/api/register', async (req, res) => {
       const { fullName, email, address, city, postalCode, otp } = req.body;
       if (!email || !otp) return res.status(400).json({ error: 'Email and OTP are required' });
 
-      if (otp !== '123456') {
-        const storedOtpData = otpStore.get(email);
-        if (!storedOtpData || storedOtpData.otp !== otp || storedOtpData.expiresAt < Date.now()) {
-          return res.status(400).json({ error: 'Invalid or expired OTP' });
-        }
+      const storedOtpData = otpStore.get(email);
+      if (!storedOtpData || storedOtpData.otp !== otp || storedOtpData.expiresAt < Date.now()) {
+        return res.status(400).json({ error: 'Invalid or expired OTP' });
       }
 
       // Generate unique username to prevent MongoDB duplicate null key error
@@ -277,11 +275,9 @@ app.post('/api/login', async (req, res) => {
 
   // Citizen Login (Email + OTP)
   if (email && otp) {
-    if (otp !== '123456') {
-      const storedOtpData = otpStore.get(email);
-      if (!storedOtpData || storedOtpData.otp !== otp || storedOtpData.expiresAt < Date.now()) {
-        return res.status(400).json({ error: 'Invalid or expired OTP' });
-      }
+    const storedOtpData = otpStore.get(email);
+    if (!storedOtpData || storedOtpData.otp !== otp || storedOtpData.expiresAt < Date.now()) {
+      return res.status(400).json({ error: 'Invalid or expired OTP' });
     }
     const user: any = await (User as any).findOne({ email }).lean();
     if (!user) return res.status(404).json({ error: 'User not found. Please register.' });
